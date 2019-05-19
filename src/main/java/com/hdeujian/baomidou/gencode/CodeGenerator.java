@@ -1,5 +1,7 @@
 package com.hdeujian.baomidou.gencode;
 
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -11,7 +13,9 @@ import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
@@ -20,6 +24,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CodeGenerator {
+//order_base,sport_post,sport_ticket,order_sport_item
+    private static String USER_NAME = "develop";
+    private static String PASS_WORD = "Hippo123!@#";
+    private static String URL = "jdbc:mysql://47.107.245.1:3306/demo?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false";
+//    private static String USER_NAME = "root";
+//    private static String PASS_WORD = "1234567";
+//    private static String URL = "jdbc:mysql://localhost:3306/sports?useUnicode=true&useSSL=false&characterEncoding=utf8";
     /**
      * <p>
      * 读取控制台内容
@@ -49,23 +60,27 @@ public class CodeGenerator {
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("yeyongjian");
         gc.setOpen(false);
+        gc.setDateType(DateType.ONLY_DATE);
+        gc.setIdType(IdType.NONE);
         // gc.setSwagger2(true); 实体属性 Swagger2 注解
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/github-learn?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        dsc.setDbType(DbType.MYSQL);
+        dsc.setTypeConvert(new MySqlTypeConvert());
+        dsc.setUrl(URL);
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("1234567");
+        dsc.setUsername(USER_NAME);
+        dsc.setPassword(PASS_WORD);
         mpg.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName("report");
-//        pc.setModuleName(scanner("模块名"));
-        pc.setParent("com.baomidou.ant");
+//        pc.setModuleName("report");
+        pc.setModuleName(scanner("模块名"));
+        pc.setParent("com.sports");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -126,10 +141,10 @@ public class CodeGenerator {
 //        strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
-//        strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
-        strategy.setInclude("user");
-//        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
-        strategy.setSuperEntityColumns("id");
+        strategy.setSuperControllerClass("com.sports.api.controller.BaseController");
+//        strategy.setInclude("user");
+        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
+//        strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);

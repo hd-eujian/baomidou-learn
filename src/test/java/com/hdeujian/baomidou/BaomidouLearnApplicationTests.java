@@ -18,9 +18,22 @@ public class BaomidouLearnApplicationTests {
     private UserMapper userMapper;
     @Test
     public void contextLoads() {
-        QueryWrapper<User> queryWrapper = new QueryWrapper();
-        List<User> list = userMapper.selectList(queryWrapper);
-        System.out.println(list);
+//        QueryWrapper<User> queryWrapper = new QueryWrapper();
+//        List<User> list = userMapper.selectList(queryWrapper);
+//        System.out.println(list);
+        User user = new User();
+        user.setId(22L);
+        user.setAge(2);
+        user.setEmail("emal");
+        user.setName("username");
+
+        try {
+            int insert = userMapper.insert(user);
+        }catch (Exception e){
+            System.out.println(e);
+
+        }
+
     }
 
 }
